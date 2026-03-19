@@ -110,7 +110,7 @@ export function ServerDataTable<T>({ columns, apiUrl, extraParams, onDataLoaded,
     useEffect(() => { setPageIndex(0); }, [globalFilter, sorting, extraParams]);
 
     // Refresh when key changes (after mutation)
-    useEffect(() => { if (refreshKey !== undefined) fetchData(); }, [refreshKey]);
+    useEffect(() => { if (refreshKey !== undefined) fetchData(); }, [refreshKey, fetchData]);
 
     const table = useReactTable({
         data,

@@ -64,7 +64,7 @@ export default function TransactionsIndex({ services, draftCount }: Props) {
 
     useEffect(() => {
         form.setData('service_id', '');
-    }, [selectedVehicle]);
+    }, [selectedVehicle]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const refresh = () => setRefreshKey((k) => k + 1);
 
