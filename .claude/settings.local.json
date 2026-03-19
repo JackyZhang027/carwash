@@ -12,7 +12,8 @@
       "Bash(grep -r \"toast\\\\|Toast\\\\|sonner\" /c/Users/user/Herd/carwash/resources/js/ --include=*.tsx --include=*.ts)",
       "Bash(npx shadcn@latest add sonner --yes)",
       "Bash(grep -n \"from ''@/routes''\" c:/Users/user/Herd/carwash/resources/js/pages/auth/login.tsx c:/Users/user/Herd/carwash/resources/js/pages/auth/register.tsx c:/Users/user/Herd/carwash/resources/js/pages/welcome.tsx)",
-      "Bash(npx shadcn@latest add switch --yes)"
+      "Bash(npx shadcn@latest add switch --yes)",
+      "Bash(grep -rn \"from ''@/routes/\" c:/Users/user/Herd/carwash/resources/js/pages/auth/)"
     ]
   }
 }
