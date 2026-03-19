@@ -2,57 +2,165 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Commands
+---
 
-### Development
-```bash
-composer run dev        # Start all dev servers (PHP, queue, pail logs, Vite) concurrently
+# Commands
+
+## Development
+composer run dev        # Start all dev servers (PHP, queue, pail logs, Vite)
 composer run dev:ssr    # Same but with SSR enabled
-```
 
-### Testing
-```bash
-composer run test       # Run all Pest tests
-php artisan test --filter=TestName   # Run a single test
-```
+## Testing
+composer run test
+php artisan test --filter=TestName
 
-### Linting & Formatting
-```bash
-composer run lint       # Run PHP Pint + ESLint + TypeScript check
-./vendor/bin/pint       # PHP formatting only
-npx eslint resources/   # JS/TS linting only
-npx tsc --noEmit        # TypeScript type checking only
-```
+## Linting & Formatting
+composer run lint
+./vendor/bin/pint
+npx eslint resources/
+npx tsc --noEmit
 
-### Database
-```bash
-php artisan migrate     # Run migrations
-php artisan db:seed     # Seed database
-```
+## Database
+php artisan migrate
+php artisan db:seed
 
-## Architecture
+---
 
-**Stack:** Laravel 12 + React 19 + Inertia.js + TypeScript + Tailwind CSS 4
+# Architecture
 
-This is a monolithic full-stack app — no separate API. Laravel controllers return Inertia responses, which render React pages client-side with SSR support.
+Stack:
+- Laravel 12 (Backend)
+- React 19 + TypeScript (Frontend)
+- Inertia.js (SPA bridge)
+- Tailwind CSS 4
+- Vite
 
-### Key Patterns
+This is a monolithic Inertia application — DO NOT introduce separate REST APIs unless explicitly required.
 
-- **Routing:** `routes/web.php` + `routes/settings.php`. No `api.php` — all routes serve Inertia pages.
-- **Authentication:** Handled entirely by [Laravel Fortify](app/Providers/FortifyServiceProvider.php). Features enabled: registration, password reset, email verification, 2FA. Fortify views are Inertia pages (not Blade).
-- **Inertia middleware:** [HandleInertiaRequests.php](app/Http/Middleware/HandleInertiaRequests.php) shares global props: app name, auth user, sidebar open state.
-- **Settings:** Controllers under `app/Http/Controllers/Settings/` follow a pattern: `edit()` returns Inertia page, `update()` handles form submission.
-- **React pages:** Located in `resources/js/pages/`. Inertia maps route responses to page components by name.
-- **UI components:** Radix UI primitives + custom components styled with Tailwind CSS 4. Component config in [components.json](components.json).
+---
 
-### Database
+# Development Principles
 
-SQLite by default (even in production via `.env`). Sessions, cache, and queues all use the `database` driver.
+- Follow Laravel best practices (Controllers, Services, Form Requests)
+- Keep business logic out of controllers
+- Prefer reusable components in React
+- Keep components small and focused
+- Follow Laravel + Inertia conventions strictly
+- Follow DRY (Don't Repeat Yourself)
+- Avoid over-engineering
 
-### Testing
+---
 
-Uses **Pest** (not PHPUnit directly). Tests use SQLite `:memory:` database. Feature tests are in `tests/Feature/`, covering auth flows and settings.
+# Backend (Laravel)
 
-### Production Security Defaults
+Structure:
+- Controllers → request/response only
+- Services → business logic
+- Form Requests → validation
+- Models → Eloquent ORM
 
-[AppServiceProvider](app/Providers/AppServiceProvider.php) enforces stricter password rules in production (12+ chars, mixed case, symbols, uncompromised) and disables destructive DB commands.
+Rules:
+- ALWAYS use Form Request for validation
+- NEVER put business logic in controllers
+- Use Eloquent relationships instead of raw queries when possible
+- Use transactions for critical operations
+- Prefer dependency injection
+
+---
+
+# Frontend (React + Inertia)
+
+Structure:
+- Pages → resources/js/pages
+- Components → resources/js/components
+- Layouts → resources/js/layouts
+
+Rules:
+- Use usePage() for shared props
+- Use Link from Inertia (NOT <a>)
+- Use router.post/put/delete for actions
+- Extract reusable UI components
+- Keep pages clean and declarative
+
+---
+
+# Inertia Best Practices
+
+- Do NOT create API routes unless necessary
+- Always return Inertia::render()
+- Use partial reloads when possible
+- Use preserveScroll and preserveState appropriately
+- Use server-driven data instead of client fetching
+
+---
+
+# Authentication
+
+Handled via Laravel Fortify
+
+---
+
+# UI & Styling
+
+- Tailwind CSS 4 only
+- Use existing component system
+- Avoid inline styles
+- Maintain design consistency
+
+---
+
+# File Uploads
+
+- Use multipart/form-data
+- Handle uploads in Laravel
+- Store via Laravel Storage
+- Return URL/path to frontend
+
+---
+
+# Testing
+
+- Use Pest
+- Prefer feature tests
+- Use in-memory SQLite
+
+---
+
+# Performance Guidelines
+
+- Avoid N+1 queries → use with()
+- Use pagination for large datasets
+- Use eager loading
+
+---
+
+# Naming Conventions
+
+Backend:
+- Controller → ProductController
+- Service → ProductService
+- Request → StoreProductRequest
+- Model → Product
+
+Frontend:
+- Page → Products/Index.tsx
+- Component → ProductCard.tsx
+- Hook → useProducts.ts
+
+---
+
+# When Generating Code
+
+Claude must:
+1. Follow existing structure
+2. Match coding style
+3. Prefer simple solutions
+4. Avoid unnecessary dependencies
+5. Provide production-ready code
+
+---
+
+# Notes
+
+- Prioritize maintainability and clarity
+- Prefer readability over cleverness

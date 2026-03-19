@@ -1,34 +1,74 @@
-import { Head } from '@inertiajs/react';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { Link } from '@inertiajs/react';
+import { Car, Receipt, TrendingDown, TrendingUp } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { dashboard } from '@/routes';
+import { formatRp } from '@/lib/format';
 import type { BreadcrumbItem } from '@/types';
 
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Dashboard',
-        href: dashboard(),
-    },
-];
+type DashboardStats = {
+    today_income: number;
+    today_expense: number;
+    today_transaction_count: number;
+    draft_count: number;
+};
 
-export default function Dashboard() {
+const breadcrumbs: BreadcrumbItem[] = [{ title: 'Dashboard', href: dashboard() }];
+
+
+export default function Dashboard({ stats }: { stats: DashboardStats }) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
+<div className="space-y-6 p-4">
+                <h1 className="text-xl font-semibold">Dashboard</h1>
+
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">Pendapatan Hari Ini</CardTitle>
+                            <TrendingUp className="h-4 w-4 text-green-500" />
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-2xl font-bold text-green-600">{formatRp(stats?.today_income ?? 0)}</p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">Pengeluaran Hari Ini</CardTitle>
+                            <TrendingDown className="h-4 w-4 text-red-500" />
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-2xl font-bold text-red-600">{formatRp(stats?.today_expense ?? 0)}</p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">Transaksi Hari Ini</CardTitle>
+                            <Receipt className="h-4 w-4 text-blue-500" />
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-2xl font-bold">{stats?.today_transaction_count ?? 0}</p>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between pb-2">
+                            <CardTitle className="text-sm font-medium text-muted-foreground">Draft Belum Publish</CardTitle>
+                            <Car className="h-4 w-4 text-orange-500" />
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-2xl font-bold text-orange-600">{stats?.draft_count ?? 0}</p>
+                        </CardContent>
+                    </Card>
                 </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+
+                <div className="flex flex-wrap gap-3">
+                    <Button asChild>
+                        <Link href="/transactions"><Receipt className="mr-2 h-4 w-4" /> Input Transaksi</Link>
+                    </Button>
+                    <Button variant="outline" asChild>
+                        <Link href="/expenses"><TrendingDown className="mr-2 h-4 w-4" /> Input Pengeluaran</Link>
+                    </Button>
                 </div>
             </div>
         </AppLayout>

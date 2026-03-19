@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -40,8 +41,20 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
+                'roles' => $request->user()?->getRoleNames() ?? [],
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'appSettings' => [
+                'app_name' => Setting::get('app_name', 'Car Wash'),
+                'app_description' => Setting::get('app_description', ''),
+                'logo_url' => Setting::get('app_logo') ? asset('storage/' . Setting::get('app_logo')) : null,
+            ],
+            'plAuthenticated' => $request->session()->has('pl_authenticated_at')
+                && (now()->timestamp - $request->session()->get('pl_authenticated_at')) < 1800,
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error'   => $request->session()->get('error'),
+            ],
         ];
     }
 }

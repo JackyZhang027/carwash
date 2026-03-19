@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(composer require:*)",
+      "Bash(composer install:*)",
+      "Bash(php artisan:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx shadcn@latest add table tabs --yes)",
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(find /c/Users/user/Herd/carwash -type f \\\\\\(-name *toast* -o -name *notification* -o -name *sonner* \\\\\\))",
+      "Bash(grep -r \"toast\\\\|Toast\\\\|sonner\" /c/Users/user/Herd/carwash/resources/js/ --include=*.tsx --include=*.ts)",
+      "Bash(npx shadcn@latest add sonner --yes)",
+      "Bash(grep -n \"from ''@/routes''\" c:/Users/user/Herd/carwash/resources/js/pages/auth/login.tsx c:/Users/user/Herd/carwash/resources/js/pages/auth/register.tsx c:/Users/user/Herd/carwash/resources/js/pages/welcome.tsx)",
+      "Bash(npx shadcn@latest add switch --yes)"
+    ]
+  }
+}

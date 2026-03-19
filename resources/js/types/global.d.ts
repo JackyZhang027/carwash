@@ -1,3 +1,4 @@
+import type { AppSettings } from '@/types/carwash';
 import type { Auth } from '@/types/auth';
 
 declare module '@inertiajs/core' {
@@ -6,6 +7,9 @@ declare module '@inertiajs/core' {
             name: string;
             auth: Auth;
             sidebarOpen: boolean;
+            appSettings: AppSettings;
+            plAuthenticated: boolean;
+            flash: { success?: string; error?: string };
             [key: string]: unknown;
         };
     }
