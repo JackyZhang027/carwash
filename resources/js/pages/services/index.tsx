@@ -3,15 +3,16 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Edit2, Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { ServerDataTable } from '@/components/server-data-table';
-import AppLayout from '@/layouts/app-layout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { NumericInput } from '@/components/ui/numeric-input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import AppLayout from '@/layouts/app-layout';
 import { formatRp } from '@/lib/format';
 import type { Service } from '@/types';
 
@@ -67,9 +68,9 @@ export default function ServicesIndex() {
         router.patch(`/services/${s.id}/restore`, {}, { onSuccess: () => refresh() });
     };
 
-    const extraParams: Record<string, string | boolean> = {};
+    const extraParams: Record<string, string | number | undefined> = {};
     if (vehicleFilter !== 'all') extraParams.vehicle_type = vehicleFilter;
-    if (showArchived) extraParams.show_archived = true;
+    if (showArchived) extraParams.show_archived = 1;
 
     const columns: ColumnDef<Service>[] = [
         {
@@ -197,13 +198,11 @@ export default function ServicesIndex() {
                         </div>
                         <div>
                             <Label>Harga (Rp)</Label>
-                            <Input
+                            <NumericInput
                                 className="mt-1"
-                                type="number"
-                                min={0}
                                 value={form.data.price}
-                                onChange={(e) => form.setData('price', e.target.value)}
-                                placeholder="30000"
+                                onChange={(v) => form.setData('price', v)}
+                                placeholder="30,000"
                             />
                             {form.errors.price && <p className="mt-1 text-sm text-red-500">{form.errors.price}</p>}
                         </div>

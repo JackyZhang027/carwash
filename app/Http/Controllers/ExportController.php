@@ -8,15 +8,15 @@ use App\Models\Setting;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ExportController extends Controller
 {
     public function index(): \Inertia\Response
     {
-        return \Inertia\Inertia::render('export/index');
+        return Inertia::render('export/index');
     }
 
     public function export(Request $request): Response

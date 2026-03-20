@@ -54,6 +54,11 @@ class ProfitLossController extends Controller
 
     public function index(Request $request): Response
     {
+        $request->validate([
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+        ]);
+
         $startDate = $request->get('start_date', today()->toDateString());
         $endDate = $request->get('end_date', today()->toDateString());
 
@@ -75,6 +80,11 @@ class ProfitLossController extends Controller
 
     public function datatableTransactions(Request $request): JsonResponse
     {
+        $request->validate([
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+        ]);
+
         $startDate = $request->get('start_date', today()->toDateString());
         $endDate = $request->get('end_date', today()->toDateString());
 
@@ -90,6 +100,11 @@ class ProfitLossController extends Controller
 
     public function datatableExpenses(Request $request): JsonResponse
     {
+        $request->validate([
+            'start_date' => ['nullable', 'date'],
+            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
+        ]);
+
         $startDate = $request->get('start_date', today()->toDateString());
         $endDate = $request->get('end_date', today()->toDateString());
 

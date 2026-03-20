@@ -7,7 +7,6 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithTitle;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class ProfitLossExport implements WithMultipleSheets
 {
@@ -23,7 +22,7 @@ class ProfitLossExport implements WithMultipleSheets
     }
 }
 
-class ProfitLossSummarySheet implements FromArray, WithTitle, WithHeadings, WithColumnFormatting
+class ProfitLossSummarySheet implements FromArray, WithColumnFormatting, WithHeadings, WithTitle
 {
     public function __construct(private array $data) {}
 
@@ -55,7 +54,7 @@ class ProfitLossSummarySheet implements FromArray, WithTitle, WithHeadings, With
     }
 }
 
-class ProfitLossTransactionsSheet implements FromArray, WithTitle, WithHeadings, WithColumnFormatting
+class ProfitLossTransactionsSheet implements FromArray, WithColumnFormatting, WithHeadings, WithTitle
 {
     public function __construct(private array $data) {}
 
@@ -95,7 +94,7 @@ class ProfitLossTransactionsSheet implements FromArray, WithTitle, WithHeadings,
     }
 }
 
-class ProfitLossExpensesSheet implements FromArray, WithTitle, WithHeadings, WithColumnFormatting
+class ProfitLossExpensesSheet implements FromArray, WithColumnFormatting, WithHeadings, WithTitle
 {
     public function __construct(private array $data) {}
 

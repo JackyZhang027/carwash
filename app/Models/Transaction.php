@@ -14,6 +14,7 @@ class Transaction extends Model
         'date',
         'service_id',
         'vehicle_type',
+        'vehicle_brand',
         'service_name',
         'plate_no',
         'price',

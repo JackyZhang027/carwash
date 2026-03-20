@@ -1,10 +1,11 @@
 import {
     flexRender,
     getCoreRowModel,
-    useReactTable,
-    type ColumnDef,
-    type SortingState,
+    useReactTable
+    
+    
 } from '@tanstack/react-table';
+import type {ColumnDef, SortingState} from '@tanstack/react-table';
 import { ChevronDown, ChevronUp, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';

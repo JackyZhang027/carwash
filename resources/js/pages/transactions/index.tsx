@@ -4,15 +4,16 @@ import { CheckCircle, Edit2, Plus, Send, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { PasswordVerifyModal } from '@/components/password-verify-modal';
 import { ServerDataTable } from '@/components/server-data-table';
-import AppLayout from '@/layouts/app-layout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { NumericInput } from '@/components/ui/numeric-input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import AppLayout from '@/layouts/app-layout';
 import { formatRp } from '@/lib/format';
 import type { Service, Transaction, VehicleType } from '@/types';
 
@@ -30,6 +31,7 @@ type FormData = {
     date: string;
     service_id: string;
     plate_no: string;
+    vehicle_brand: string;
     adj_price: string;
     payment_method: string;
     note: string;
@@ -50,6 +52,7 @@ export default function TransactionsIndex({ services, draftCount }: Props) {
         date: today,
         service_id: '',
         plate_no: '',
+        vehicle_brand: '',
         adj_price: '0',
         payment_method: 'cash',
         note: '',
@@ -58,7 +61,7 @@ export default function TransactionsIndex({ services, draftCount }: Props) {
 
     const filteredServices = services.filter((s) => s.vehicle_type === selectedVehicle);
     const selectedService = services.find((s) => String(s.id) === form.data.service_id);
-    const basePrice = selectedService?.price ?? 0;
+    const basePrice = Number(selectedService?.price ?? 0);
     const adjPrice = parseFloat(form.data.adj_price) || 0;
     const finalPrice = basePrice + adjPrice;
 
@@ -83,6 +86,7 @@ export default function TransactionsIndex({ services, draftCount }: Props) {
             date: t.date.split('T')[0],
             service_id: t.service_id ? String(t.service_id) : '',
             plate_no: t.plate_no ?? '',
+            vehicle_brand: t.vehicle_brand ?? '',
             adj_price: String(t.adj_price),
             payment_method: t.payment_method,
             note: t.note ?? '',
@@ -147,7 +151,21 @@ export default function TransactionsIndex({ services, draftCount }: Props) {
                 </div>
             ),
         },
-        { accessorKey: 'plate_no', header: 'No. Polisi', cell: ({ getValue }) => (getValue() as string) || '-' },
+        {
+            accessorKey: 'plate_no',
+            header: 'No. Polisi',
+            cell: ({ row }) => (
+                <div>
+                    <div>{row.original.plate_no || '-'}</div>
+                    {row.original.vehicle_brand && <div className="text-xs text-muted-foreground">{row.original.vehicle_brand}</div>}
+                </div>
+            ),
+        },
+        {
+            accessorKey: 'note',
+            header: 'Catatan',
+            cell: ({ getValue }) => <span className="text-sm text-muted-foreground">{(getValue() as string | null) || '-'}</span>,
+        },
         {
             accessorKey: 'payment_method',
             header: 'Metode',
@@ -192,7 +210,21 @@ export default function TransactionsIndex({ services, draftCount }: Props) {
                 </div>
             ),
         },
-        { accessorKey: 'plate_no', header: 'No. Polisi', cell: ({ getValue }) => (getValue() as string) || '-' },
+        {
+            accessorKey: 'plate_no',
+            header: 'No. Polisi',
+            cell: ({ row }) => (
+                <div>
+                    <div>{row.original.plate_no || '-'}</div>
+                    {row.original.vehicle_brand && <div className="text-xs text-muted-foreground">{row.original.vehicle_brand}</div>}
+                </div>
+            ),
+        },
+        {
+            accessorKey: 'note',
+            header: 'Catatan',
+            cell: ({ getValue }) => <span className="text-sm text-muted-foreground">{(getValue() as string | null) || '-'}</span>,
+        },
         {
             accessorKey: 'payment_method',
             header: 'Metode',
@@ -321,11 +353,10 @@ export default function TransactionsIndex({ services, draftCount }: Props) {
                             </div>
                             <div>
                                 <Label>ADJ Price</Label>
-                                <Input
+                                <NumericInput
                                     className="mt-1"
-                                    type="number"
                                     value={form.data.adj_price}
-                                    onChange={(e) => form.setData('adj_price', e.target.value)}
+                                    onChange={(v) => form.setData('adj_price', v)}
                                     placeholder="0"
                                 />
                             </div>
@@ -354,15 +385,27 @@ export default function TransactionsIndex({ services, draftCount }: Props) {
                             {form.errors.payment_method && <p className="mt-1 text-sm text-red-500">{form.errors.payment_method}</p>}
                         </div>
 
-                        <div>
-                            <Label>No. Polisi</Label>
-                            <Input
-                                className="mt-1"
-                                value={form.data.plate_no}
-                                onChange={(e) => form.setData('plate_no', e.target.value)}
-                                placeholder="B 1234 ABC"
-                            />
-                            {form.errors.plate_no && <p className="mt-1 text-sm text-red-500">{form.errors.plate_no}</p>}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <Label>No. Polisi</Label>
+                                <Input
+                                    className="mt-1"
+                                    value={form.data.plate_no}
+                                    onChange={(e) => form.setData('plate_no', e.target.value)}
+                                    placeholder="B 1234 ABC"
+                                />
+                                {form.errors.plate_no && <p className="mt-1 text-sm text-red-500">{form.errors.plate_no}</p>}
+                            </div>
+                            <div>
+                                <Label>Merek Kendaraan</Label>
+                                <Input
+                                    className="mt-1"
+                                    value={form.data.vehicle_brand}
+                                    onChange={(e) => form.setData('vehicle_brand', e.target.value)}
+                                    placeholder="Toyota, Honda, ..."
+                                />
+                                {form.errors.vehicle_brand && <p className="mt-1 text-sm text-red-500">{form.errors.vehicle_brand}</p>}
+                            </div>
                         </div>
 
                         <div>

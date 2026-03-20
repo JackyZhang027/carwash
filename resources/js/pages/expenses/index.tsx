@@ -4,14 +4,15 @@ import { CheckCircle, Edit2, Plus, Send, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { PasswordVerifyModal } from '@/components/password-verify-modal';
 import { ServerDataTable } from '@/components/server-data-table';
-import AppLayout from '@/layouts/app-layout';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { NumericInput } from '@/components/ui/numeric-input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import AppLayout from '@/layouts/app-layout';
 import { formatRp } from '@/lib/format';
 import type { Expense } from '@/types';
 
@@ -217,13 +218,11 @@ export default function ExpensesIndex({ draftCount }: Props) {
                         </div>
                         <div>
                             <Label>Biaya (Rp)</Label>
-                            <Input
+                            <NumericInput
                                 className="mt-1"
-                                type="number"
-                                min={0}
                                 value={form.data.amount}
-                                onChange={(e) => form.setData('amount', e.target.value)}
-                                placeholder="50000"
+                                onChange={(v) => form.setData('amount', v)}
+                                placeholder="50,000"
                             />
                             {form.errors.amount && <p className="mt-1 text-sm text-red-500">{form.errors.amount}</p>}
                         </div>

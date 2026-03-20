@@ -17,6 +17,7 @@ export type Transaction = {
     date: string;
     service_id: number | null;
     vehicle_type: VehicleType;
+    vehicle_brand: string | null;
     service_name: string;
     plate_no: string | null;
     price: number;

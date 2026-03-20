@@ -1,14 +1,16 @@
 import { Link } from '@inertiajs/react';
 import { Car, Receipt, TrendingDown, TrendingUp } from 'lucide-react';
-import AppLayout from '@/layouts/app-layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { dashboard } from '@/routes';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AppLayout from '@/layouts/app-layout';
 import { formatRp } from '@/lib/format';
+import { dashboard } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
 
 type DashboardStats = {
     today_income: number;
+    today_income_cash: number;
+    today_income_qris: number;
     today_expense: number;
     today_transaction_count: number;
     draft_count: number;
@@ -31,6 +33,10 @@ export default function Dashboard({ stats }: { stats: DashboardStats }) {
                         </CardHeader>
                         <CardContent>
                             <p className="text-2xl font-bold text-green-600">{formatRp(stats?.today_income ?? 0)}</p>
+                            <div className="mt-1 flex gap-3 text-xs text-muted-foreground">
+                                <span>Cash: <span className="font-medium text-foreground">{formatRp(stats?.today_income_cash ?? 0)}</span></span>
+                                <span>QRIS: <span className="font-medium text-foreground">{formatRp(stats?.today_income_qris ?? 0)}</span></span>
+                            </div>
                         </CardContent>
                     </Card>
                     <Card>

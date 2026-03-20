@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Service;
+use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -27,7 +28,7 @@ class TransactionController extends Controller
     public function datatableDraft(): JsonResponse
     {
         $query = Transaction::draft()->select([
-            'id', 'date', 'service_name', 'vehicle_type', 'plate_no',
+            'id', 'date', 'service_name', 'vehicle_type', 'vehicle_brand', 'plate_no',
             'payment_method', 'price', 'adj_price', 'final_price', 'note', 'status', 'service_id',
         ]);
 
@@ -41,7 +42,7 @@ class TransactionController extends Controller
     public function datatablePublished(): JsonResponse
     {
         $query = Transaction::published()->select([
-            'id', 'date', 'service_name', 'vehicle_type', 'plate_no',
+            'id', 'date', 'service_name', 'vehicle_type', 'vehicle_brand', 'plate_no',
             'payment_method', 'price', 'adj_price', 'final_price', 'note', 'status', 'service_id',
         ]);
 
@@ -58,6 +59,7 @@ class TransactionController extends Controller
             'date' => ['required', 'date'],
             'service_id' => ['required', 'exists:services,id'],
             'plate_no' => ['required', 'string', 'max:20'],
+            'vehicle_brand' => ['nullable', 'string', 'max:50'],
             'adj_price' => ['nullable', 'numeric'],
             'payment_method' => ['required', 'in:cash,qris'],
             'note' => ['nullable', 'string'],
@@ -72,6 +74,7 @@ class TransactionController extends Controller
             'date' => $validated['date'],
             'service_id' => $service->id,
             'vehicle_type' => $service->vehicle_type,
+            'vehicle_brand' => $validated['vehicle_brand'] ?? null,
             'service_name' => $service->name,
             'plate_no' => $validated['plate_no'],
             'price' => $service->price,
@@ -97,6 +100,7 @@ class TransactionController extends Controller
             'date' => ['required', 'date'],
             'service_id' => ['required', 'exists:services,id'],
             'plate_no' => ['required', 'string', 'max:20'],
+            'vehicle_brand' => ['nullable', 'string', 'max:50'],
             'adj_price' => ['nullable', 'numeric'],
             'payment_method' => ['required', 'in:cash,qris'],
             'note' => ['nullable', 'string'],
@@ -109,6 +113,7 @@ class TransactionController extends Controller
             'date' => $validated['date'],
             'service_id' => $service->id,
             'vehicle_type' => $service->vehicle_type,
+            'vehicle_brand' => $validated['vehicle_brand'] ?? null,
             'service_name' => $service->name,
             'plate_no' => $validated['plate_no'],
             'price' => $service->price,
@@ -139,7 +144,7 @@ class TransactionController extends Controller
                 'password' => ['required', 'string'],
             ]);
 
-            $plPassword = \App\Models\Setting::get('pl_password');
+            $plPassword = Setting::get('pl_password');
             if (! Hash::check($request->password, $plPassword)) {
                 return back()->withErrors(['password' => 'Password tidak valid.']);
             }

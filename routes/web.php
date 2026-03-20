@@ -7,20 +7,23 @@ use App\Http\Controllers\ProfitLossController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
-use App\Http\Middleware\PlPasswordMiddleware;
+use App\Models\Expense;
+use App\Models\Transaction;
 use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
+use Inertia\Inertia;
 
 Route::redirect('/', '/login')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return \Inertia\Inertia::render('dashboard', [
+        return Inertia::render('dashboard', [
             'stats' => [
-                'today_income' => \App\Models\Transaction::published()->whereDate('date', today())->sum('final_price'),
-                'today_expense' => \App\Models\Expense::published()->whereDate('date', today())->sum('amount'),
-                'today_transaction_count' => \App\Models\Transaction::published()->whereDate('date', today())->count(),
-                'draft_count' => \App\Models\Transaction::draft()->count() + \App\Models\Expense::draft()->count(),
+                'today_income' => Transaction::published()->whereDate('date', today())->sum('final_price'),
+                'today_income_cash' => Transaction::published()->whereDate('date', today())->where('payment_method', 'cash')->sum('final_price'),
+                'today_income_qris' => Transaction::published()->whereDate('date', today())->where('payment_method', 'qris')->sum('final_price'),
+                'today_expense' => Expense::published()->whereDate('date', today())->sum('amount'),
+                'today_transaction_count' => Transaction::published()->whereDate('date', today())->count(),
+                'draft_count' => Transaction::draft()->count() + Expense::draft()->count(),
             ],
         ]);
     })->name('dashboard');
@@ -49,7 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('expenses/{expense}', [ExpenseController::class, 'destroy'])->name('expenses.destroy');
 
     // M3 — P/L
-    Route::post('profit-loss/check-password', [ProfitLossController::class, 'checkPassword'])->name('profit-loss.check-password');
+    Route::post('profit-loss/check-password', [ProfitLossController::class, 'checkPassword'])->name('profit-loss.check-password')->middleware('throttle:10,1');
     Route::middleware('role:admin')->group(function () {
         Route::get('profit-loss', [ProfitLossController::class, 'index'])->name('profit-loss.index');
     });

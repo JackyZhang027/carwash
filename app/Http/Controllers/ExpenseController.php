@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -99,7 +100,7 @@ class ExpenseController extends Controller
                 'password' => ['required', 'string'],
             ]);
 
-            $plPassword = \App\Models\Setting::get('pl_password');
+            $plPassword = Setting::get('pl_password');
             if (! Hash::check($request->password, $plPassword)) {
                 return back()->withErrors(['password' => 'Password tidak valid.']);
             }

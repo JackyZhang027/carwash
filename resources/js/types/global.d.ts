@@ -1,5 +1,5 @@
-import type { AppSettings } from '@/types/carwash';
 import type { Auth } from '@/types/auth';
+import type { AppSettings } from '@/types/carwash';
 
 declare module '@inertiajs/core' {
     export interface InertiaConfig {
